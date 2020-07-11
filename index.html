@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+ 		<title>GIS and the Web</title>
+
+ 		<!-- Load the CSS and JavaScript for Leaflet -->
+ 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+ 		<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+
+<!-- Load Firebase -->
+<script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-database.js"></script>
+
+
+
+
+		<style>
+
+			/* set page to full size */
+			html, body {
+				padding: 0;
+				margin: 0;
+				width: 100%;
+				height: 100%;
+			}
+
+			/* set map to full page */
+			#map {
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+	</head>
+
+	<!-- Set onload callback for page to create the map -->
+	<body onload='initMap()'>
+
+		<!-- div to hold the map -->
+		<div id='map'></div>
+
+		<script>
+
+			// setup global variables
+			let map, myDb;
+
+			/**
+			 * Initialise the Map
+			 */
+			function initMap(){
+
+				// before we do anything, lets initialise the database
+				initDb();
+
+				// this is a variable that holds the reference to the Leaflet map object
+				map = L.map('map').setView([53.4807593, -2.2426305], 13);
+
+				// this adds the basemap tiles to the map
+				L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+					attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+				}).addTo(map);
+
+
+			}
+
+
+			/**
+			 * Initialise the database into the global myDb variable
+			 */
+			function initDb() {
+
+				// set the config object for firebase (get this from the Firebase Console)
+                const firebaseConfig = {
+                        apiKey: "AIzaSyCSRZmaGk4IFCZ8-q0aFCnQ6oHQZdwAuFg",
+                        authDomain: "playgrounds-5b892.firebaseapp.com",
+                        databaseURL: "https://playgrounds-5b892.firebaseio.com",
+                        projectId: "playgrounds-5b892",
+                        storageBucket: "playgrounds-5b892.appspot.com",
+                        messagingSenderId: "549708580065",
+                        appId: "1:549708580065:web:c7e064979f45991b6a63a0",
+                        measurementId: "G-N0PSX4T4R8"
+                        };
+
+
+				// initialise the firebase object
+				firebase.initializeApp(firebaseConfig);
+
+				// sign in to firebase anonymously
+				firebase.auth().signInAnonymously().catch(function(error) {
+					console.log(error.code);
+					console.log(error.message);
+				});
+
+				// create a global reference to your 'clicks' database
+				myDb = firebase.database().ref().child('features');
+
+				// listener for when a location is added to the database - add it to the map as well
+				// this is called for everything in the database when the page loads, THEN for each new one
+				myDb.on('child_added', function(snapshot) {
+
+					// get the click location from firebase
+					const newfeature = snapshot.val();
+
+					// add the point to the map (remembering to flip the coordinates)
+					const marker = L.marker(
+						[ newfeature.geometry.coordinates[1], newfeature.geometry.coordinates[0] ],
+						{ draggable: true }
+					).addTo(map);
+
+ 				
+
+  			
+				});
+			}
+		</script>
+	</body>
+</html>
