@@ -43,18 +43,6 @@ firebase.initializeApp(firebaseConfig);
 </script>
 
 <script>
-var files = [];
-document.getElementById("files").addEventListener("change", function(e) {
-  files = e.target.files;
-  for (let i = 0; i < files.length; i++) {
-    console.log(files[i]);
-  }
-});
-
-
-
-document.getElementById("send").addEventListener("click", function() {
-  //checks if files are selected
 
   var storageRef = firebase.storage().ref('webcam1.jpg');
   var fileUpload = document.getElementById("cameraInput");
@@ -65,22 +53,6 @@ document.getElementById("send").addEventListener("click", function() {
   })
 
 
-});
-
-function getFileUrl(filename) {
-  //create a storage reference
-  var storage = firebase.storage().ref(filename);
-
-  //get file url
-  storage
-    .getDownloadURL()
-    .then(function(url) {
-      console.log(url);
-    })
-    .catch(function(error) {
-      console.log("error encountered");
-    });
-}
 </script>
 </body>
 </html>
