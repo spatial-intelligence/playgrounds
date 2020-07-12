@@ -56,12 +56,12 @@ document.getElementById("files").addEventListener("change", function(e) {
 document.getElementById("send").addEventListener("click", function() {
   //checks if files are selected
 
-  let storageRef = firebase.storage().ref('photos/myPictureName')
-  let fileUpload = document.getElementById("cameraInput")
+  var storageRef = firebase.storage().ref('webcam1.jpg');
+  var fileUpload = document.getElementById("cameraInput");
 
   fileUpload.addEventListener('change', function(evt) {
-      let firstFile = evt.target.files[0] // upload the first file only
-      let uploadTask = storageRef.put(firstFile)
+      var firstFile = evt.target.files[0] ;
+      var uploadTask = storageRef.put(firstFile);
   })
 
 
