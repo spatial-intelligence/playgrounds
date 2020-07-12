@@ -1,0 +1,87 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<title>Firebase File Upload</title>
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1, maximum-scale=1"
+/>
+</head>
+<body>
+<div>
+Upload Files<br />
+<input type="file" id="files" multiple /><br /><br />
+<button id="send">Upload</button>
+<p id="uploading"></p>
+<progress value="0" max="100" id="progress"></progress>
+</div>
+
+===
+<input type="file" accept="image/*" capture="camera" id="cameraInput">
+
+<script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-storage.js"></script>
+
+
+<script>
+// Your web app's Firebase configuration
+var firebaseConfig = {
+        apiKey: "AIzaSyCSRZmaGk4IFCZ8-q0aFCnQ6oHQZdwAuFg",
+        authDomain: "playgrounds-5b892.firebaseapp.com",
+        databaseURL: "https://playgrounds-5b892.firebaseio.com",
+        projectId: "playgrounds-5b892",
+        storageBucket: "playgrounds-5b892.appspot.com",
+        messagingSenderId: "549708580065",
+        appId: "1:549708580065:web:c7e064979f45991b6a63a0",
+        measurementId: "G-N0PSX4T4R8"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+</script>
+
+<script>
+var files = [];
+document.getElementById("files").addEventListener("change", function(e) {
+  files = e.target.files;
+  for (let i = 0; i < files.length; i++) {
+    console.log(files[i]);
+  }
+});
+
+
+
+document.getElementById("send").addEventListener("click", function() {
+  //checks if files are selected
+
+  let storageRef = firebase.storage().ref('photos/myPictureName')
+  let fileUpload = document.getElementById("cameraInput")
+
+  fileUpload.addEventListener('change', function(evt) {
+      let firstFile = evt.target.files[0] // upload the first file only
+      let uploadTask = storageRef.put(firstFile)
+  })
+
+
+});
+
+function getFileUrl(filename) {
+  //create a storage reference
+  var storage = firebase.storage().ref(filename);
+
+  //get file url
+  storage
+    .getDownloadURL()
+    .then(function(url) {
+      console.log(url);
+    })
+    .catch(function(error) {
+      console.log("error encountered");
+    });
+}
+</script>
+</body>
+</html>
+         
